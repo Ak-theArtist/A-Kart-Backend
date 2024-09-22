@@ -1,5 +1,5 @@
 const ProductsModel = require('../models/Products');
-const IMG_BASE_URL = 'http://localhost:4000/static/';
+const IMG_BASE_URL = process.env.REACT_APP_IMG_BASE_URL;
 const mongoose = require('mongoose');
 
 const success = (status, data) => ({ status, success: true, data });
