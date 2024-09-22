@@ -15,7 +15,7 @@ const path = require('path');
 dbConnect();
 
 // Serve static files
-app.use('/static', express.static(path.join(__dirname, '/upload/images')));
+app.use('/upload/images', express.static(path.join(__dirname, 'upload/images')));
 
 // Middleware
 app.use(cookieParser());
