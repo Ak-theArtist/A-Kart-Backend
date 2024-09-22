@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 4000;
 const dbConnect = require('./config/dbConnect');
 const authRouter = require('./routes/authRoutes');
 const productRouter = require('./routes/productRoutes');
-const orderRouter = require('./routes/orderRoutes'); 
+const orderRouter = require('./routes/orderRoutes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -19,21 +19,11 @@ app.use('/static', express.static(path.join(__dirname, '/upload/images')));
 
 // Middleware
 app.use(cookieParser());
-const allowedOrigins = [
-    'http://localhost:5173', 
-    'https://a-kart-frontend.onrender.com' 
-  ];
-  
-  app.use(cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true
-  }));
+app.use(cors({
+    origin: 'https://a-kart-frontend.onrender.com',
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true,
+}));
 app.options('*', cors());
 
 app.use(bodyParser.json());
@@ -48,7 +38,7 @@ app.use((req, res, next) => {
 // Route handlers
 app.use('/auth', authRouter);
 app.use('/product', productRouter);
-app.use('/order', orderRouter); 
+app.use('/order', orderRouter);
 
 // Start the server
 app.listen(PORT, (error) => {
