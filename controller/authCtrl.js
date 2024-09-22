@@ -236,7 +236,11 @@ const register = async (req, res) => {
                                 { expiresIn: "1d" }
                             );
 
-                            res.cookie('token', token, { httpOnly: true });
+                            res.cookie('token', token, {
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV === 'production',
+                                sameSite: 'None', 
+                            });                            
                             sendMail(user.email, "Welcome", `Hi ${user.name}, thank you for exploring A-Kart!`)
 
                             return res.status(201).json({ message: 'User registered successfully', token });
@@ -339,7 +343,11 @@ const login = async (req, res) => {
                     "jwt-secret-key",
                     { expiresIn: "1d" }
                 );
-                res.cookie('token', token, { httpOnly: true });
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'None',
+                });                
                 return res.status(200).json({ token });
             });
         })

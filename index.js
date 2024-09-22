@@ -20,12 +20,20 @@ app.use('/static', express.static(path.join(__dirname, '/upload/images')));
 // Middleware
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
+    credentials: true, 
 }));
+app.options('*', cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+    console.log('Cookies:', req.cookies);
+    next();
+});
+
 
 // Route handlers
 app.use('/auth', authRouter);
