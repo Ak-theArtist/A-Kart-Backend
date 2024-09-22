@@ -19,11 +19,21 @@ app.use('/static', express.static(path.join(__dirname, '/upload/images')));
 
 // Middleware
 app.use(cookieParser());
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true, 
-}));
+const allowedOrigins = [
+    'http://localhost:5173', 
+    'https://a-kart-frontend.onrender.com' 
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true
+  }));
 app.options('*', cors());
 
 app.use(bodyParser.json());
