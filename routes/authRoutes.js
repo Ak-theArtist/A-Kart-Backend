@@ -43,6 +43,7 @@ router.get('/popularinmen', popularinMen);
 router.get('/popularinwomen', popularinWomen);
 router.get('/me', verifyUser, me);
 router.get('/superadmin', verifyUser, isSuperAdmin, superAdmin);
+router.get('/admin', adminInfo);
 router.get('/admininfo', verifyUser, isSuperAdmin, adminInfo);
 router.put('/makeAdmin/:id', makeAdmin);
 router.put('/revertAdmin/:id', revertAdmin);
