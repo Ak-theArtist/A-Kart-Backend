@@ -340,19 +340,16 @@ const login = async (req, res) => {
                 }
                 const token = jwt.sign(
                     { email: user.email, name: user.name, role: user.role },
-                    "jwt-secret-key",
+                    process.env.JWT_SECRET,
                     { expiresIn: "1d" }
                 );
-                res.cookie('token', token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'None',
-                });                
                 return res.status(200).json({ token });
             });
         })
         .catch(err => res.status(500).json({ error: 'Internal Server Error' }));
 };
+
+
 
 const updateProfile = async (req, res) => {
     console.log('Received data:', req.body);
