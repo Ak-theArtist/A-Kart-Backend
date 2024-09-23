@@ -29,6 +29,11 @@ const {
     getUserAddresses,  
 } = require('../controller/authCtrl');
 
+router.get('/admin', (req, res, next) => {
+    console.log('Admin route hit');
+    next();
+}, adminInfo);
+
 router.post('/register', register);
 router.post('/forgotpassword', forgotPassword);
 router.post('/verifyotp', verifyOTP);
