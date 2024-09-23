@@ -232,15 +232,9 @@ const register = async (req, res) => {
                         .then(user => {
                             const token = jwt.sign(
                                 { email: user.email, name: user.name, role: user.role },
-                                "jwt-secret-key",
+                                process.env.JWT_SECRET,
                                 { expiresIn: "1d" }
-                            );
-
-                            res.cookie('token', token, {
-                                httpOnly: true,
-                                secure: process.env.NODE_ENV === 'production',
-                                sameSite: 'None', 
-                            });                            
+                            );                           
                             sendMail(user.email, "Welcome", `Hi ${user.name}, thank you for exploring A-Kart!`)
 
                             return res.status(201).json({ message: 'User registered successfully', token });

@@ -3,20 +3,20 @@ const jwt = require('jsonwebtoken')
 
 // Middleware to verify user and decode JWT token
 const verifyUser = (req, res, next) => {
-    const token = req.cookies.token;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; 
 
     if (!token) {
-        return res.status(403).json({ error: 'The token is missing' });
+        return res.status(403).json({ error: 'Token is missing' });
     }
-
-    jwt.verify(token, 'jwt-secret-key', (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET || 'jwt-secret-key', (err, decoded) => {
         if (err) {
-            return res.status(401).json({ error: 'The token is wrong' });
+            return res.status(401).json({ error: 'Invalid token' });
         }
-
         req.email = decoded.email;
         req.name = decoded.name;
         req.role = decoded.role;
+        
         next();
     });
 };
