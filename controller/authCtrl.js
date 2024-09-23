@@ -208,7 +208,6 @@ const getUserCart = async (req, res) => {
 
 // Logout
 const logout = async (req, res) => {
-    res.clearCookie('token');
     return res.json('Success');
 };
 
