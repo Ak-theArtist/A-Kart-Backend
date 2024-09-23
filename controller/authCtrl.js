@@ -23,18 +23,19 @@ const superAdmin = async (req, res) => {
 
 
 const me = async (req, res) => {
-    UserModel.findOne({ email: req.email })
-        .then(user => {
-            if (!user) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-            res.json(user);
-        })
-        .catch(err => {
-            console.error('Error fetching user:', err);
-            res.status(500).json({ error: 'Internal server error' });
-        });
+    try {
+        const user = await UserModel.findOne({ email: req.email });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const { password, ...userInfo } = user._doc; 
+        res.json(userInfo); 
+    } catch (err) {
+        console.error('Error fetching user:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
+
 
 
 // Make a user an admin
