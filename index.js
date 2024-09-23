@@ -28,19 +28,16 @@ app.options('*', cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve static files for the React app
-const frontendPath = path.join(__dirname, 'Frontend/dist');
-app.use(express.static(frontendPath));
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 // Route handlers
 app.use('/auth', authRouter);
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
-
-// Handle client-side routing for React app
-app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-});
 
 // Start the server
 app.listen(PORT, (error) => {
