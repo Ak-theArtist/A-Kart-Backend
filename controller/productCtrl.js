@@ -8,40 +8,39 @@ const error = (status, message) => ({ status, success: false, message });
 
 const createProduct = async (req, res) => {
     try {
-      const { name, category, new_price, old_price, description } = req.body;
-      const images = req.files; 
-  
-      if (!name || !images || !new_price || !old_price || !description) {
-        return res.status(400).json({
-          success: false,
-          message: 'Missing required fields',
+        const { name, category, new_price, old_price, description } = req.body;
+        let images = req.files;
+
+        if (!name || !images || !new_price || !old_price || !description) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields',
+            });
+        }
+
+        const imageUrls = images.map(image => image.path); 
+
+        const product = await ProductsModel.create({
+            name,
+            image: imageUrls,  
+            category: category || 'men',
+            new_price,
+            old_price,
+            description,
         });
-      }
-  
-      const imageUrls = images.map(file => file.path);  
-  
-      const product = await ProductsModel.create({
-        name,
-        image: imageUrls, 
-        category: category || 'men',
-        new_price,
-        old_price,
-        description,
-      });
-  
-      await product.save();
-      res.json({
-        success: true,
-        product
-      });
+
+        await product.save();
+        res.json({ success: true, product });
+
     } catch (error) {
-      console.error('Error adding product:', error);
-      res.status(500).json({
-        success: false,
-        message: 'An error occurred while adding the product',
-      });
+        console.error('Error creating product:', error); 
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while adding the product',
+            error: error.message,  
+        });
     }
-  };
+};
 
 
 const editProduct = async (req, res) => {

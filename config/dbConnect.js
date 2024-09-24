@@ -1,12 +1,15 @@
-const {default: mongoose } = require("mongoose");
+const { default: mongoose } = require("mongoose");
 
-const dbConnect =() => {
-    try{
-    const connection = mongoose.connect(process.env.MONGODB_URL)
-    console.log('Mongodb is Connected')
+const dbConnect = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URL, {
+            useNewUrlParser: true, 
+            useUnifiedTopology: true
+        });
+        console.log('Mongodb is Connected');
     } catch (error) {
-        console.log('Database Error')
+        console.error('Database Connection Error:', error); 
+        process.exit(1);  
     }
 };
-
-module.exports= dbConnect;
+module.exports = dbConnect;
