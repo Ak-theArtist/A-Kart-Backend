@@ -1,43 +1,47 @@
 const ProductsModel = require('../models/Products');
 const IMG_BASE_URL = process.env.REACT_APP_IMG_BASE_URL;
 const mongoose = require('mongoose');
+const cloudinary = require('../config/cloudinaryConfig');
 
 const success = (status, data) => ({ status, success: true, data });
 const error = (status, message) => ({ status, success: false, message });
 
 const createProduct = async (req, res) => {
     try {
-        const { name, category, new_price, old_price, description } = req.body;
-        let image = req.files;
-
-        if (!name || !image || !new_price || !old_price || !description) {
-            return res.status(400).json({
-                success: false,
-                message: 'Missing required fields',
-            });
-        }
-
-        const imageUrls = req.files.map(file => IMG_BASE_URL + file.filename);
-        const product = await ProductsModel.create({
-            name,
-            image: imageUrls,
-            category: category || 'men',
-            new_price,
-            old_price,
-            description,
+      const { name, category, new_price, old_price, description } = req.body;
+      const images = req.files; 
+  
+      if (!name || !images || !new_price || !old_price || !description) {
+        return res.status(400).json({
+          success: false,
+          message: 'Missing required fields',
         });
-        await product.save();
-        res.json({
-            product
-        });
+      }
+  
+      const imageUrls = images.map(file => file.path);  
+  
+      const product = await ProductsModel.create({
+        name,
+        image: imageUrls, 
+        category: category || 'men',
+        new_price,
+        old_price,
+        description,
+      });
+  
+      await product.save();
+      res.json({
+        success: true,
+        product
+      });
     } catch (error) {
-        console.error('Error adding product:', error);
-        res.status(500).json({
-            success: false,
-            message: 'An error occurred while adding the product',
-        });
+      console.error('Error adding product:', error);
+      res.status(500).json({
+        success: false,
+        message: 'An error occurred while adding the product',
+      });
     }
-};
+  };
 
 
 const editProduct = async (req, res) => {
