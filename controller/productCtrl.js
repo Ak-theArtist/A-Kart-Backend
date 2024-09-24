@@ -1,7 +1,7 @@
 const ProductsModel = require('../models/Products');
 const IMG_BASE_URL = process.env.REACT_APP_IMG_BASE_URL;
 const mongoose = require('mongoose');
-const cloudinary = require('../config/cloudinaryConfig');
+const cloudinary = require('../config/cloudinaryConfig.js');
 
 const success = (status, data) => ({ status, success: true, data });
 const error = (status, message) => ({ status, success: false, message });
